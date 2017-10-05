@@ -61,7 +61,7 @@ class NewVisitorTest(unittest.TestCase):
         rows = self.browser.find_elements_by_tag_name('tr')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
-
+        self.fail('Finish the test')
 
 # Edith wonders whether the site will remember her list. Then she sees
 # that the site has generated a unique URL for her -- there is some
