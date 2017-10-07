@@ -30,17 +30,7 @@ class HomePageTest(TestCase):
             'item_text': 'A new list item'
         })
         self.assertEqual(responce.status_code, 302)
-        self.assertEqual(responce['location'], '/')
-
-    def test_display_multiple_items(self):
-        Item.objects.create(text = 'item1')
-        Item.objects.create(text = 'item2')
-
-        responce = self.client.get('/')
-
-        self.assertIn('item1', responce.content.decode(), msg="item1 not found in responce")
-        self.assertIn('item2', responce.content.decode(), msg="item2 not found in responce")
-
+        self.assertEqual(responce['location'], '/lists/the-only-list-in-the-world/')
 
 class ItemModelTest(TestCase):
     ''' Test the item model'''
@@ -61,3 +51,19 @@ class ItemModelTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
+
+
+class LiveViewTest(TestCase):
+
+    def test_display_all_items(self):
+        Item.objects.create(text="item1")
+        Item.objects.create(text="item2")
+
+        responce = self.client.get('/lists/the-only-list-in-the-world/')
+
+        self.assertContains(responce,'item1')
+        self.assertContains(responce ,'item2')
+
+    def test_uses_list_template(self):
+        responce = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(responce, 'lists/list.html')
