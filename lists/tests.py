@@ -11,26 +11,7 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         ''' Check if correct template is being used for render'''
         responce = self.client.get('/')
-        self.assertTemplateUsed(responce, 'lists/home.html')       
-    def test_can_save_a_POST_request(self):
-        ''' Test if view echo back the post data'''
-        responce = self.client.post('/', data={
-            'item_text': 'A new list item'
-        })
-        #test if post is being saved in database
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-
-        self.assertEqual('A new list item', new_item.text)
-    def test_only_save_items_when_necessary(self):
-        self.client.get('/')
-        self.assertEqual(Item.objects.count(), 0)
-    def test_redirect_after_form_submission(self):
-        responce = self.client.post('/', data={
-            'item_text': 'A new list item'
-        })
-        self.assertEqual(responce.status_code, 302)
-        self.assertEqual(responce['location'], '/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(responce, 'lists/home.html')
 
 class ItemModelTest(TestCase):
     ''' Test the item model'''
@@ -67,3 +48,13 @@ class LiveViewTest(TestCase):
     def test_uses_list_template(self):
         responce = self.client.get('/lists/the-only-list-in-the-world/')
         self.assertTemplateUsed(responce, 'lists/list.html')
+
+    def test_can_save_a_POST_request(self):
+        self.client.post('/lists/new', data={'item_text': 'A new list item'})
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new list item')
+
+    def test_redirect_after_POST(self):
+        responce = self.client.post('/lists/new', data={'item_text': 'A new list item'})
+        self.assertRedirects(responce, '/lists/the-only-list-in-the-world/')
