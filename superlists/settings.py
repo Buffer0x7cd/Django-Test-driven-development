@@ -25,7 +25,7 @@ SECRET_KEY = '=^ck4zh*7q9h1lf*k32@tem^wj=8!m*(e0^_((-aff_^dw^8$w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['staging.buffer0x7cd.me', '127.0.0.1']
 
 
 # Application definition
