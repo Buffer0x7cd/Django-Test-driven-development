@@ -17,7 +17,7 @@ def view_list(request, list_id):
             tmpItem = Item(text=request.POST.get('item_text'), item_list=list_)
             tmpItem.full_clean()
             tmpItem.save()
-            return redirect('/lists/{0}/'.format(list_.id))
+            return redirect(list_)
         except ValidationError:
             error = "you can't submit empty list items"
     return render(request, 'lists/list.html', {'list':list_, 'error':error})
@@ -32,4 +32,4 @@ def new_list(request):
         error = "you can't submit empty list items"
         return render(request, 'lists/home.html', {'error':error})
     tmpItem.save()
-    return redirect('/lists/{0}/'.format(list_.id))
+    return redirect(list_)

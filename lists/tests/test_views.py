@@ -92,4 +92,7 @@ class LiveViewTest(TestCase):
         self.assertTemplateUsed(responce, 'lists/list.html')
         expected_error = escape("you can't submit empty list items")
         self.assertContains(responce, expected_error)
-                    
+
+    def test_absolute_url(self):
+        list_ = List.objects.create()
+        self.assertEqual(list_.get_absolute_url(), '/lists/{0}/'.format(list_.id))
