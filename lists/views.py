@@ -11,10 +11,16 @@ def home_page(request):
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
+    error = ''
     if request.POST:
-        Item.objects.create(text= request.POST.get('item_text'), item_list=list_)
-        return redirect('/lists/{0}/'.format(list_.id))
-    return render(request, 'lists/list.html', {'list':list_})
+        try:
+            tmpItem = Item(text=request.POST.get('item_text'), item_list=list_)
+            tmpItem.full_clean()
+            tmpItem.save()
+            return redirect('/lists/{0}/'.format(list_.id))
+        except ValidationError:
+            error = "you can't submit empty list items"
+    return render(request, 'lists/list.html', {'list':list_, 'error':error})
 
 def new_list(request):
     list_ = List.objects.create()

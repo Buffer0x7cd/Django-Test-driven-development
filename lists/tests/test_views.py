@@ -85,3 +85,11 @@ class LiveViewTest(TestCase):
         self.assertEqual(Item.objects.count(), 0)
         self.assertEqual(List.objects.count(), 0)
 
+    def test_adding_empty_items_to_existing_lists_return_error(self):
+        list_ =  List.objects.create()
+        responce = self.client.post('/lists/{0}/'.format(list_.id), data={'item_text':''})
+        self.assertEqual(responce.status_code, 200)
+        self.assertTemplateUsed(responce, 'lists/list.html')
+        expected_error = escape("you can't submit empty list items")
+        self.assertContains(responce, expected_error)
+                    
