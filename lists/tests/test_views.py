@@ -52,7 +52,7 @@ class LiveViewTest(TestCase):
         other_list = List.objects.create()
         correct_list = List.objects.create()
         
-        self.client.post('/lists/{0}/add'.format(correct_list.id),
+        self.client.post('/lists/{0}/'.format(correct_list.id),
         data={'item_text': 'A new item for existing list'})
 
         self.assertEqual(Item.objects.count(), 1)
@@ -63,7 +63,7 @@ class LiveViewTest(TestCase):
     def test_redirecs_to_list_view(self):
         other_list = List.objects.create()
         correct_list = List.objects.create()
-        responce = self.client.post('/lists/{0}/add'.format(correct_list.id),
+        responce = self.client.post('/lists/{0}/'.format(correct_list.id),
         data={'item_text': 'A new item for existing list'})
         self.assertRedirects(responce, '/lists/{0}/'.format(correct_list.id))
 
@@ -73,7 +73,6 @@ class LiveViewTest(TestCase):
         response = self.client.get('/lists/{0}/'.format(correct_list.id))
         self.assertEqual(response.context['list'], correct_list)
 
-class NewListTest(TestCase):
     def test_empty_submissions_returns_error(self):
         responce = self.client.post('/lists/new', data={'item_text':''})
         self.assertEqual(responce.status_code, 200)
@@ -85,3 +84,4 @@ class NewListTest(TestCase):
         self.client.post('/lists/new', data={'item_text':''})
         self.assertEqual(Item.objects.count(), 0)
         self.assertEqual(List.objects.count(), 0)
+

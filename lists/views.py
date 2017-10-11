@@ -11,7 +11,9 @@ def home_page(request):
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
-    items = Item.objects.filter(item_list=list_)
+    if request.POST:
+        Item.objects.create(text= request.POST.get('item_text'), item_list=list_)
+        return redirect('/lists/{0}/'.format(list_.id))
     return render(request, 'lists/list.html', {'list':list_})
 
 def new_list(request):
@@ -24,10 +26,4 @@ def new_list(request):
         error = "you can't submit empty list items"
         return render(request, 'lists/home.html', {'error':error})
     tmpItem.save()
-    return redirect('/lists/{0}/'.format(list_.id))
-
-def add_item(request, list_id):
-    ''' add item to an existing list'''
-    list_ = List.objects.get(id=list_id)
-    item = Item.objects.create(text=request.POST['item_text'], item_list=list_)
     return redirect('/lists/{0}/'.format(list_.id))
